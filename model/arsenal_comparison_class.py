@@ -1,0 +1,26 @@
+class ArsenalComparison:
+    def __init__(self, **kwargs):
+        # Dynamically set any keys passed from the dictionary, defaulting to None
+        if kwargs.get("_id") is not None:
+            self._id = kwargs.get("_id")
+        self.team_name = kwargs.get("team_name")
+        self.season = kwargs.get("season")
+        self.can_finish_above = kwargs.get("can_finish_above")
+        self.arsenal_points_to_finish_above = kwargs.get("arsenal_points_to_finish_above")
+        self.arsenal_ppg_to_finish_above = kwargs.get("arsenal_ppg_to_finish_above")
+        self.direct_fixture_games_played = kwargs.get("direct_fixture_games_played")
+        self.direct_fixture_percentage_played = kwargs.get("direct_fixture_percentage_played")
+        self.direct_fixture_points_comparison = kwargs.get("direct_fixture_points_comparison")
+        self.direct_fixture_ppg_comparison = kwargs.get("direct_fixture_ppg_comparison")
+        self.points_to_match_arsenal = kwargs.get("points_to_match_arsenal")
+        self.ppg_to_match_arsenal = kwargs.get("ppg_to_match_arsenal")
+        self.points_for_arsenal_to_match = kwargs.get("points_for_arsenal_to_match")
+        self.ppg_for_arsenal_to_match = kwargs.get("ppg_for_arsenal_to_match")
+        self.first_10_points_comparison = kwargs.get("first_10_points_comparison")
+        self.first_10_ppg_comparison = kwargs.get("first_10_ppg_comparison")
+        self.second_10_points_comparison = kwargs.get("second_10_points_comparison")
+        self.second_10_ppg_comparison = kwargs.get("second_10_ppg_comparison")
+        self.third_10_points_comparison = kwargs.get("third_10_points_comparison")
+        self.third_10_ppg_comparison = kwargs.get("third_10_ppg_comparison")
+        self.last_8_points_comparison = kwargs.get("last_8_points_comparison")
+        self.last_8_ppg_comparison = kwargs.get("last_8_ppg_comparison")
