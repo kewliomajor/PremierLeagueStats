@@ -5,7 +5,7 @@ base_url = "https://www.soccerstats.com"
 
 url = base_url + "/latest.asp?league=england"
 
-table_updater.update_table(url, 2027, True)
+#table_updater.update_table(url, 2027, True)
 team_updater.update_teams(base_url, 2027, False, True)
 
 url = url + "_2026"

@@ -28,14 +28,13 @@ def update_table(url, year, current_year = True):
         soup = BeautifulSoup(page.content(), "html.parser")
 
         center_page = soup.find("div",
-                                style="width:700px;margin-left:28px;padding-left:4px;margin-right:0px;margin-top:3px;float:left;")
+                                class_="comp-tab-pane pane-league")
 
-        tables = center_page.find_all("table", id="btable")
+        league_table = center_page.find("table", id="leagueTable")
 
         fixed_index_table = scraper_index_constants.get_fixed_index_table(current_year)
-        league_table_html = tables[fixed_index_table[0]]
 
-        rows = league_table_html.find_all("tr", class_="odd")
+        rows = league_table.find_all("tr", class_="standings-data-row")
 
         if existing_table is None:
             league_table = league_table_class.LeagueTable()
@@ -54,13 +53,13 @@ def update_table(url, year, current_year = True):
             webpage_row.position = int(columns[fixed_index_table[2]].text.strip())
             webpage_row.team_name = columns[fixed_index_table[3]].text.strip()
             webpage_row.games_played = int(columns[fixed_index_table[4]].text.strip())
-            webpage_row.wins = int(columns[fixed_index_table[5]].text.strip())
-            webpage_row.draws = int(columns[fixed_index_table[6]].text.strip())
-            webpage_row.losses = int(columns[fixed_index_table[7]].text.strip())
-            webpage_row.goals_for = int(columns[fixed_index_table[8]].text.strip())
-            webpage_row.goals_against = int(columns[fixed_index_table[9]].text.strip())
-            webpage_row.goal_differential = int(columns[fixed_index_table[10]].text.strip())
-            webpage_row.points = int(columns[fixed_index_table[11]].text.strip())
+            webpage_row.wins = int(columns[fixed_index_table[6]].text.strip())
+            webpage_row.draws = int(columns[fixed_index_table[7]].text.strip())
+            webpage_row.losses = int(columns[fixed_index_table[8]].text.strip())
+            webpage_row.goals_for = int(columns[fixed_index_table[9]].text.strip())
+            webpage_row.goals_against = int(columns[fixed_index_table[10]].text.strip())
+            webpage_row.goal_differential = int(columns[fixed_index_table[11]].text.strip())
+            webpage_row.points = int(columns[fixed_index_table[5]].text.strip())
             webpage_row.points_per_game = float(columns[variable_indicies[0]].text.strip())
             webpage_row.last_8 = float(columns[variable_indicies[1]].text.strip())
             webpage_row.clean_sheet_percentage = int(columns[variable_indicies[2]].text.strip().rstrip("%"))
