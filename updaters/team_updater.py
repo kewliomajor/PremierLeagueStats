@@ -11,20 +11,25 @@ from model.team_ordered_results_class import TeamOrderedResults
 
 
 def update_fixtures(team_results, soup):
-    right_page = soup.find("div",
-                           style="width:297px;margin-left:28px;float:left;")
+    team_grids = soup.find_all("div", class_="team-grid-container")
+    right_page = team_grids[1].find("div",
+                           class_="team-col-right")
 
     if right_page is None:
         print("Right page panel doesn't exist")
         exit()
 
-    tables_html = right_page.find_all("table", id="btable")
-    rows = tables_html[0].find_all("tr", class_="odd")
+    tables = right_page.find_all("table")
+    rows = tables[0].find_all("tr")
 
     for row in rows:
         columns = row.find_all("td")
+
+        if len(columns) == 0:
+            continue
+
         # this row has the current team (no home/away data)
-        if len(columns) == 5:
+        if columns[1].text.strip() == team_results.team_name:
             continue
 
         team_fixture = TeamFixtures()
@@ -44,15 +49,14 @@ def update_fixtures(team_results, soup):
                 team_fixture.home_points = 0
         if ":" in away_text:
             away_score = away_text.split(":")
-            team_fixture.away_goals_for = int(away_score[1])
-            team_fixture.away_goals_against = int(away_score[0])
+            team_fixture.away_goals_for = int(away_score[0])
+            team_fixture.away_goals_against = int(away_score[1])
             if team_fixture.away_goals_for > team_fixture.away_goals_against:
                 team_fixture.away_points = 3
             elif team_fixture.away_goals_for == team_fixture.away_goals_against:
                 team_fixture.away_points = 1
             else:
                 team_fixture.away_points = 0
-
         team_results.fixtures.append(team_fixture)
 
     return team_results
