@@ -3,6 +3,7 @@ import time
 from playwright.sync_api import sync_playwright
 from playwright_stealth import stealth_sync
 from bs4 import BeautifulSoup
+
 from model import mongo_client, league_table_class, stats_encoder_class, team_results_class
 import json
 
@@ -28,12 +29,14 @@ def update_fixtures(team_results, soup):
         if len(columns) == 0:
             continue
 
+        opponent_name = columns[1].text.strip()
+
         # this row has the current team (no home/away data)
-        if columns[1].text.strip() == team_results.team_name:
+        if opponent_name == team_results.team_name:
             continue
 
         team_fixture = TeamFixtures()
-        team_fixture.opponent = columns[1].text.strip()
+        team_fixture.opponent = opponent_name
         home_text = columns[4].text
         away_text = columns[5].text
 
@@ -62,26 +65,28 @@ def update_fixtures(team_results, soup):
     return team_results
 
 def update_ordered_results(team_results, soup, current_year):
-    center_page = soup.find("div",
-                           style="width:642px;margin-left:4px;margin-right:3px;float:left;")
+    team_grids = soup.find_all("div", class_="team-grid-container")
+    left_page = team_grids[1].find("div",
+                                    class_="team-col-left")
 
-    if center_page is None:
-        print("Center page panel doesn't exist")
+    if left_page is None:
+        print("Left page panel doesn't exist")
         exit()
 
-    tables = center_page.find_all("table")
-    if current_year:
-        rows = tables[10].find_all("tr", height="38")
-    else:
-        rows = tables[4].find_all("tr", height="38")
+    tables = left_page.find_all("table")
+    rows = tables[0].find_all("tr")
 
     for row in rows:
         columns = row.find_all("td")
+
+        if len(columns) == 0:
+            continue
+
         ordered_result = TeamOrderedResults()
-        home_team = columns[1].text.strip()
         score_text = columns[2].text.strip()[:3]
         score_text = score_text.split(":")
-        away_team = columns[3].text.strip()
+        home_team = columns[1].text.strip().split('\n', 1)[0]
+        away_team = columns[3].text.strip().split('\n', 1)[0]
 
         if home_team == team_results.team_name:
             ordered_result.opponent = away_team

@@ -47,11 +47,11 @@ def update_table(url, year, current_year = True):
         for row in rows:
             columns = row.find_all("td")
             num_columns = len(columns)
-            variable_indicies = scraper_index_constants.get_variable_index_table(num_columns, current_year)
             webpage_row = league_table_row_class.LeagueTableRow()
             webpage_row.link = columns[fixed_index_table[1]].find("a")["href"]
             webpage_row.position = int(columns[fixed_index_table[2]].text.strip())
-            webpage_row.team_name = columns[fixed_index_table[3]].text.strip()
+            team_name = columns[fixed_index_table[3]].text.strip()
+            webpage_row.team_name = team_name
             webpage_row.games_played = int(columns[fixed_index_table[4]].text.strip())
             webpage_row.wins = int(columns[fixed_index_table[6]].text.strip())
             webpage_row.draws = int(columns[fixed_index_table[7]].text.strip())
@@ -60,12 +60,11 @@ def update_table(url, year, current_year = True):
             webpage_row.goals_against = int(columns[fixed_index_table[10]].text.strip())
             webpage_row.goal_differential = int(columns[fixed_index_table[11]].text.strip())
             webpage_row.points = int(columns[fixed_index_table[5]].text.strip())
-            webpage_row.points_per_game = float(columns[variable_indicies[0]].text.strip())
-            webpage_row.last_8 = float(columns[variable_indicies[1]].text.strip())
-            webpage_row.clean_sheet_percentage = int(columns[variable_indicies[2]].text.strip().rstrip("%"))
-            webpage_row.score_rate_percentage = int(columns[variable_indicies[3]].text.strip().rstrip("%"))
-            if current_year:
-                webpage_row.maximum_possible_points = int(columns[variable_indicies[4]].text.strip())
+            webpage_row.points_per_game = float(columns[num_columns - 5].text.strip())
+            webpage_row.last_8 = float(columns[num_columns - 4].text.strip())
+            webpage_row.clean_sheet_percentage = int(columns[num_columns - 3].text.strip().rstrip("%"))
+            webpage_row.score_rate_percentage = int(columns[num_columns - 2].text.strip().rstrip("%"))
+            webpage_row.maximum_possible_points = int(columns[num_columns - 1].text.strip())
 
             league_table.standings.append(webpage_row)
 
